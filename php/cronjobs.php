@@ -25,17 +25,7 @@ if ($end_date_obj > $current_date) {
     $days_left = 0;
 }
 
-$last_update_date = new DateTime($last_update);
-$interval = $last_update_date->diff($current_date);
-$hours_passed = $interval->days * 24 + $interval->h;
-
-if ($hours_passed >= 24) {
-    $new_total_service_days = max(0, $total_service_days - 1);
-    $update_query = $conn->prepare("UPDATE users SET total_service_days = ?, last_update = ? WHERE id = ?");
-    $update_query->bind_param("isi", $new_total_service_days, $current_date->format('Y-m-d'), $user_id);
-    $update_query->execute();
-    $update_query->close();
-}
+// Αφαιρούμε τον έλεγχο για το πέρασμα 24 ωρών, αφού αυτό το διαχειρίζεται το cron job.
 
 $conn->close();
 ?>
